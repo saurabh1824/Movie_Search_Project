@@ -4,19 +4,19 @@
 
 export const getPopularMovies = async () =>{
 
-    const url = 'https://imdb236.p.rapidapi.com/api/imdb/search?type=movie&genre=Drama&rows=25&sortOrder=ASC&sortField=id';
-    const options = {
-        method: 'GET',
-        headers: {
-            'x-rapidapi-key': '86569629a7msh3968833d3d2dec3p1c604ejsn3e217b40da14',
-            'x-rapidapi-host': 'imdb236.p.rapidapi.com'
-        }
-    };
+const url = 'https://imdb236.p.rapidapi.com/api/imdb/most-popular-movies';
+const options = {
+	method: 'GET',
+	headers: {
+		'x-rapidapi-key': '86569629a7msh3968833d3d2dec3p1c604ejsn3e217b40da14',
+		'x-rapidapi-host': 'imdb236.p.rapidapi.com'
+	}
+};
 
     try {
         const response = await fetch(url, options);
         const data= await response.json();
-        return data.results;
+        return data;
     } catch (error) {
         console.error(error);
     }
@@ -24,23 +24,37 @@ export const getPopularMovies = async () =>{
 }
 
 
+export const searchMovies = async (query) =>{
 
-// export const searchMovies = async (query) =>{
+const url = `https://imdb-movies-web-series-etc-search.p.rapidapi.com/${query}.json`;
+const options = {
+	method: 'GET',
+	headers: {
+		'x-rapidapi-key': '86569629a7msh3968833d3d2dec3p1c604ejsn3e217b40da14',
+		'x-rapidapi-host': 'imdb-movies-web-series-etc-search.p.rapidapi.com'
+	}
+};
 
-//     const url = 'https://imdb236.p.rapidapi.com/api/imdb/search?type=movie&genre=Drama&rows=25&sortOrder=ASC&sortField=id';
-//     const options = {
-//         method: 'GET',
-//         headers: {
-//             'x-rapidapi-key': '86569629a7msh3968833d3d2dec3p1c604ejsn3e217b40da14',
-//             'x-rapidapi-host': 'imdb236.p.rapidapi.com'
-//         }
-//     };
+    try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        
+        const requiredData=[]
+        data['d'].forEach(element => {
+            const movie_data={
+                "id":element.id,
+                "originalTitle":element.l,
+                "releaseDate":element.y,
+                "primaryImage":element.i.imageUrl
+            }
+            
+            requiredData.push(movie_data)
+        });
+        console.log(requiredData);
+        
+        return requiredData;
 
-//     try {
-//         const response = await fetch(url, options);
-//         const result = await response.text();
-//         console.log(result);
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
+    } catch (error) {
+        console.error(error);
+    }
+}

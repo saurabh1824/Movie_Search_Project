@@ -1,6 +1,6 @@
 import MovieCard from "../components/MovieCard";
 import {useState ,useEffect} from "react";
-import {getPopularMovies} from "../services/api";
+import {getPopularMovies ,searchMovies} from "../services/api";
 import '../css/Home.css'
 
 function Home() {
@@ -31,10 +31,32 @@ function Home() {
     } ,[]);
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert("Searching for " + searchQuery);
-        setsearchQuery("");
+        if (!searchQuery.trim()) {
+            return;
+        }
+        
+        if (loading) return; // Prevent multiple submissions while loading
+        setLoading(true);
+
+        try {
+
+            const searchResults = await searchMovies(searchQuery);
+            if (searchResults.length === 0) {
+                setError("No movies found.");
+            }
+            setMovies(searchResults);
+            setError(null); // Clear previous errors if any
+            
+        } catch (error) {
+            setError("Failed to search movies.");
+            console.error("Error searching movies:", error);
+        }finally{
+            setLoading(false);
+        }
+
+        // setsearchQuery("");
     }
 
     return (
