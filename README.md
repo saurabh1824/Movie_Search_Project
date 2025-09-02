@@ -52,6 +52,7 @@ vite-project/
 ├── package.json
 └── ...
 
+```
 🔑 API Usage
 
 Uses RapidAPI IMDb APIs for fetching popular and searched movies.
@@ -77,5 +78,6 @@ Local Storage: Favourites are saved in your browser's local storage and persist 
 
 This project is for learning purposes.
 ⚠️ Do not expose API keys in production.
+
 
 
