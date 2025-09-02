@@ -15,7 +15,7 @@ Built with **Vite**, **React**, and **React Router**.
 ---
 
 ## 📸 Screenshots
-(Add your own screenshots here)
+to be added..
 
 ---
 
@@ -78,6 +78,7 @@ Local Storage: Favourites are saved in your browser's local storage and persist 
 
 This project is for learning purposes.
 ⚠️ Do not expose API keys in production.
+
 
 
 
