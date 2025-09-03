@@ -11,24 +11,30 @@ function Home() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-
         const loadPopularMovies = async () => {
             try {
                 const popularMovies = await getPopularMovies();
-                setMovies(popularMovies);
+                // Handle API 429 or unexpected response
+                let moviesArray = [];
+                if (Array.isArray(popularMovies)) {
+                    moviesArray = popularMovies;
+                } else if (popularMovies?.results && Array.isArray(popularMovies.results)) {
+                    moviesArray = popularMovies.results;
+                } else if (popularMovies?.d && Array.isArray(popularMovies.d)) {
+                    moviesArray = popularMovies.d;
+                }
+                setMovies(moviesArray);
+                setError(null);
             } catch (error) {
                 console.error("Error fetching popular movies:", error);
-                setError("Failed to loading movies.");
-
-            } finally
-            {
+                setError("Failed to load movies.");
+                setMovies([]);
+            } finally {
                 setLoading(false);
             }
-            
-        }
-
+        };
         loadPopularMovies();
-    } ,[]);
+    }, []);
 
 
     const handleSubmit = async (e) => {
@@ -41,18 +47,26 @@ function Home() {
         setLoading(true);
 
         try {
-
             const searchResults = await searchMovies(searchQuery);
-            if (searchResults.length === 0) {
-                setError("No movies found.");
+            let moviesArray = [];
+            if (Array.isArray(searchResults)) {
+                moviesArray = searchResults;
+            } else if (searchResults?.results && Array.isArray(searchResults.results)) {
+                moviesArray = searchResults.results;
+            } else if (searchResults?.d && Array.isArray(searchResults.d)) {
+                moviesArray = searchResults.d;
             }
-            setMovies(searchResults);
-            setError(null); // Clear previous errors if any
-            
+            if (moviesArray.length === 0) {
+                setError("No movies found.");
+            } else {
+                setError(null);
+            }
+            setMovies(moviesArray);
         } catch (error) {
             setError("Failed to search movies.");
+            setMovies([]);
             console.error("Error searching movies:", error);
-        }finally{
+        } finally {
             setLoading(false);
         }
 
